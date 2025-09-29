@@ -4,5 +4,5 @@ variable "azs" {}
 
 variable "public_subnet_cidrs" {}
 variable "private_subnet_cidrs" {}
-variable "ami" {}
+variable "ami_id" {}
 variable "instance_type" {}

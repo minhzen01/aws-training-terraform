@@ -9,8 +9,7 @@ module "vpc" {
 
 module "ec2" {
   source        = "../source/ec2"
-  ami           = var.ami
+  ami_id        = var.ami_id
   instance_type = var.instance_type
-  subnet_id     = module.vpc.public_subnet_id
   env           = var.env
 }
