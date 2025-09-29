@@ -69,6 +69,7 @@ resource "aws_route_table_association" "public" {
 
 # Private Route Table
 resource "aws_route_table" "private" {
+  count             = length(var.azs)
   vpc_id = aws_vpc.this.id
 
   route {
@@ -77,7 +78,7 @@ resource "aws_route_table" "private" {
   }
 
   tags = {
-    Name = "${var.env}-private-rt"
+    Name = "${var.env}-private-${var.azs[count.index]}-rt"
   }
 }
 
