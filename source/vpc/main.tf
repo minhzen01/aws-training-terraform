@@ -41,30 +41,29 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-# Public Route Table
-resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.this.id
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.igw.id
+# Lấy main route table của VPC
+data "aws_route_table" "main" {
+  filter {
+    name   = "vpc-id"
+    values = [aws_vpc.this.id]
   }
 
-  route {
-    cidr_block = var.cidr_block
-    gateway_id = "local"
-  }
-
-  tags = {
-    Name = "${var.env}-public-rt"
+  filter {
+    name   = "association.main"
+    values = ["true"]
   }
 }
 
-# Gán public route table
+resource "aws_route" "public_internet_access" {
+  route_table_id         = data.aws_route_table.main.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.igw.id
+}
+
 resource "aws_route_table_association" "public" {
   count          = length(aws_subnet.public[*].id)
   subnet_id      = aws_subnet.public[count.index].id
-  route_table_id = aws_route_table.public.id
+  route_table_id = data.aws_route_table.main.id
 }
 
 # Private Route Table
