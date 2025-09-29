@@ -13,3 +13,15 @@ output "private_subnets" {
 output "internet_gateway_id" {
   value = aws_internet_gateway.igw.id
 }
+
+output "bastion_sg_id" {
+  value = aws_security_group.bastion_sg.id
+}
+
+output "private_sg_id" {
+  value = aws_security_group.private_sg.id
+}
+
+output "web_sg_id" {
+  value = aws_security_group.web_sg.id
+}

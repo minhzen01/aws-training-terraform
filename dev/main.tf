@@ -11,5 +11,7 @@ module "ec2" {
   source        = "../source/ec2"
   ami_id        = var.ami_id
   instance_type = var.instance_type
+  subnet_id     = module.vpc.public_subnets[0]
+  vpc_security_group_ids = [module.vpc.bastion_sg_id]
   env           = var.env
 }
