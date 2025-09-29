@@ -54,6 +54,12 @@ data "aws_route_table" "main" {
   }
 }
 
+resource "aws_ec2_tag" "main_rt_name" {
+  resource_id = data.aws_route_table.main.id
+  key         = "Name"
+  value       = "${var.env}-public-rt"
+}
+
 resource "aws_route" "public_internet_access" {
   route_table_id         = data.aws_route_table.main.id
   destination_cidr_block = "0.0.0.0/0"
