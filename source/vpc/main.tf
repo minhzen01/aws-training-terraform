@@ -88,6 +88,80 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.private.id
 }
 
+# Security Group
+resource "aws_security_group" "bastion_sg" {
+  name        = "${var.env}-bastion-sg"
+  description = "Allow SSH from anywhere to Bastion"
+  vpc_id      = aws_vpc.this.id
+
+  ingress {
+    description = "SSH"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["203.0.0.0/8"]
+  }
+
+  tags = {
+    Name = "${var.env}-bastion-sg"
+  }
+}
+
+# Security Group Private EC2
+resource "aws_security_group" "private_sg" {
+  name        = "${var.env}-private-sg"
+  description = "Allow SSH only from Bastion Host"
+  vpc_id      = aws_vpc.this.id
+
+  ingress {
+    description      = "SSH from Bastion"
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    security_groups  = [aws_security_group.bastion_sg.id]
+  }
+
+  ingress {
+    description = "SSH"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["203.0.0.0/8"]
+  }
+
+  tags = {
+    Name = "${var.env}-private-sg"
+  }
+}
+
+# Security Group Web Server
+resource "aws_security_group" "web_sg" {
+  name        = "${var.env}-web-sg"
+  description = "Allow HTTP/HTTPS"
+  vpc_id      = aws_vpc.this.id
+
+  ingress {
+    description = "SSH"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["203.0.0.0/8"]
+  }
+
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["203.0.0.0/8"]
+  }
+
+  tags = {
+    Name = "${var.env}-web-sg"
+  }
+}
+
+
 
 
 
