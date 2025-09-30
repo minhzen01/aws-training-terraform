@@ -20,6 +20,22 @@ resource "aws_instance" "bastion" {
   }
 }
 
+resource "aws_instance" "web" {
+  ami                         = var.ami_id_web
+  instance_type               = var.instance_type_web 
+  subnet_id                   = var.subnet_id_web
+  associate_public_ip_address = true                  
+
+  vpc_security_group_ids = var.vpc_security_group_id_web
+
+  key_name = "minh-quang-key-pair-virginia" 
+
+  tags = {
+    Name = "${var.env}-mysql"
+  }
+}
+
+
 resource "aws_instance" "mysql" {
   ami                         = var.ami_id_db
   instance_type               = var.instance_type_db     

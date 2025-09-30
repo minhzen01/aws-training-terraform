@@ -8,17 +8,22 @@ module "vpc" {
 }
 
 module "ec2" {
-  source        = "../source/ec2"
-  ami_id_bastion        = var.ami_id_bastion
-  ami_id_db        = var.ami_id_db
-  instance_type_bastion = var.instance_type_bastion
-  instance_type_db = var.instance_type_db
+  source                        = "../source/ec2"
+  ami_id_bastion                = var.ami_id_bastion
+  ami_id_db                     = var.ami_id_db
+  ami_id_web                    = var.ami_id_web
 
-  subnet_id_bastion     = module.vpc.public_subnets[0]
-  subnet_id_db     = module.vpc.public_subnets[0]
+  instance_type_bastion         = var.instance_type_bastion
+  instance_type_db              = var.instance_type_db
+  instance_type_web             = var.instance_type_web
+
+  subnet_id_bastion             = module.vpc.public_subnets[0]
+  subnet_id_db                  = module.vpc.private_subnets[0]
+  subnet_id_web                 = module.vpc.public_subnets[0]
 
   vpc_security_group_id_bastion = [module.vpc.bastion_sg_id]
-  vpc_security_group_id_db = [module.vpc.db_sg_id]
+  vpc_security_group_id_db      = [module.vpc.db_sg_id]
+  vpc_security_group_id_web     = [module.vpc.web_sg_id]
 
-  env           = var.env
+  env                           = var.env
 }

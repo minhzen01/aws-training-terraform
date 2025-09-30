@@ -11,3 +11,7 @@ instance_type_bastion     = "t2.micro"
 
 ami_id_db            = "ami-0b8f248260c90c028"
 instance_type_db     = "t2.medium"
+
+
+ami_id_web           = "ami-0699531b79730bcbf"
+instance_type_web    = "t2.micro"
