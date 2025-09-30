@@ -28,7 +28,14 @@ resource "aws_instance" "web-application" {
 
   vpc_security_group_ids = var.vpc_security_group_id_web
 
-  key_name = "minh-quang-key-pair-virginia" 
+  key_name = "minh-quang-key-pair-virginia"
+
+  user_data = <<-EOF
+              #!/bin/bash
+              DB_IP="${aws_instance.mysql.private_ip}"
+              sed -i "s/\\\$host = \".*\";/\\\$host = \\"\${DB_IP}\\";/" /var/www/domain/index.php
+              sudo systemctl restart nginx
+              EOF 
 
   tags = {
     Name = "${var.env}-web-application"
