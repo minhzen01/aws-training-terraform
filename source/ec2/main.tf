@@ -20,7 +20,7 @@ resource "aws_instance" "bastion" {
   }
 }
 
-resource "aws_instance" "web" {
+resource "aws_instance" "web-application" {
   ami                         = var.ami_id_web
   instance_type               = var.instance_type_web 
   subnet_id                   = var.subnet_id_web
@@ -31,7 +31,7 @@ resource "aws_instance" "web" {
   key_name = "minh-quang-key-pair-virginia" 
 
   tags = {
-    Name = "${var.env}-mysql"
+    Name = "${var.env}-web-application"
   }
 }
 
