@@ -109,22 +109,6 @@ resource "aws_security_group" "bastion_sg" {
     cidr_blocks = ["203.0.0.0/8"]
   }
 
-  egress {
-    description     = "MYSQL"
-    from_port       = 8080
-    to_port         = 8080
-    protocol        = "tcp"
-    security_groups = [aws_security_group.db_sg.id]
-  }
-
-  egress {
-    description     = "MYSQL"
-    from_port       = 8080
-    to_port         = 8080
-    protocol        = "tcp"
-    security_groups = [aws_security_group.web_sg.id]
-  }
-
   tags = {
     Name = "${var.env}-bastion-sg"
   }
@@ -135,14 +119,6 @@ resource "aws_security_group" "web_sg" {
   name        = "${var.env}-web-sg"
   description = "Allow HTTP/HTTPS"
   vpc_id      = aws_vpc.this.id
-
-  ingress {
-    description = "SSH"
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["203.0.0.0/8"]
-  }
 
   ingress {
     description = "HTTP"
@@ -160,27 +136,46 @@ resource "aws_security_group" "web_sg" {
 # Security Group DB
 resource "aws_security_group" "db_sg" {
   name        = "${var.env}-db-sg"
-  description = "Allow 3306"
+  description = "DB SG"
   vpc_id      = aws_vpc.this.id
-
-  ingress {
-    description              = "MySQL"
-    from_port                = 3306
-    to_port                  = 3306
-    protocol                 = "tcp"
-    security_groups          = [aws_security_group.web_sg.id]
-  }
-
-  ingress {
-    description              = "Bastion"
-    from_port                = 8080
-    to_port                  = 8080
-    protocol                 = "tcp"
-    security_groups          = [aws_security_group.bastion_sg.id]
-  }
-
 
   tags = {
     Name = "${var.env}-db-sg"
   }
+}
+
+resource "aws_security_group_rule" "db_from_bastion" {
+  type                     = "ingress"
+  from_port                = 8080
+  to_port                  = 8080
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.bastion_sg.id
+  security_group_id        = aws_security_group.db_sg.id
+}
+
+resource "aws_security_group_rule" "db_from_web" {
+  type                     = "ingress"
+  from_port                = 3306
+  to_port                  = 3306
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.web_sg.id
+  security_group_id        = aws_security_group.db_sg.id
+}
+
+resource "aws_security_group_rule" "bastion_to_web" {
+  type                     = "egress"
+  from_port                = 8080
+  to_port                  = 8080
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.web_sg.id
+  security_group_id        = aws_security_group.bastion_sg.id
+}
+
+resource "aws_security_group_rule" "bastion_to_db" {
+  type                     = "egress"
+  from_port                = 8080
+  to_port                  = 8080
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.db_sg.id
+  security_group_id        = aws_security_group.bastion_sg.id
 }
