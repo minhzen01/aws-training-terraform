@@ -8,6 +8,13 @@ resource "aws_instance" "bastion" {
 
 #   key_name = var.key_pair   
 
+  user_data = <<-EOF
+              #!/bin/bash
+              sudo echo "Port 8080" >> /etc/ssh/sshd_config
+              sudo systemctl daemon-reload
+              sudo systemctl restart ssh || sudo systemctl restart sshd
+              EOF
+
   tags = {
     Name = "${var.env}-bastion"
   }

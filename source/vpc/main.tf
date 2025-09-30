@@ -109,6 +109,22 @@ resource "aws_security_group" "bastion_sg" {
     cidr_blocks = ["203.0.0.0/8"]
   }
 
+  egress {
+    description     = "MYSQL"
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [aws_security_group.db_sg.id]
+  }
+
+  egress {
+    description     = "MYSQL"
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [aws_security_group.web_sg.id]
+  }
+
   tags = {
     Name = "${var.env}-bastion-sg"
   }
@@ -154,6 +170,15 @@ resource "aws_security_group" "db_sg" {
     protocol                 = "tcp"
     security_groups          = [aws_security_group.web_sg.id]
   }
+
+  ingress {
+    description              = "Bastion"
+    from_port                = 8080
+    to_port                  = 8080
+    protocol                 = "tcp"
+    security_groups          = [aws_security_group.bastion_sg.id]
+  }
+
 
   tags = {
     Name = "${var.env}-db-sg"
