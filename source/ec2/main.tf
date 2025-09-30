@@ -30,13 +30,12 @@ resource "aws_instance" "web-application" {
 
   key_name = "minh-quang-key-pair-virginia"
 
-  user_data = <<-EOF
-              #!/bin/bash
-              DB_IP="${aws_instance.mysql.private_ip}"
-              # thay đổi dòng host trong file index.php
-              sed -i "s/\\\$host = \".*\";/\\\$host = \\"$DB_IP\\";/" /var/www/domain/index.php
-              systemctl restart nginx || systemctl restart apache2
-              EOF
+user_data = <<-EOF
+            #!/bin/bash
+            DB_IP="${aws_instance.mysql.private_ip}"
+            sudo sed -i "s/\\\$host = \".*\";/\\\$host = \\\"$DB_IP\\\";/" /var/www/domain/index.php
+            sudo systemctl restart nginx
+            EOF
 
   tags = {
     Name = "${var.env}-web-application"
