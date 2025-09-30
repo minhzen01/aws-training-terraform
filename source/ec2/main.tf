@@ -1,10 +1,10 @@
 resource "aws_instance" "bastion" {
-  ami                         = var.ami_id        
-  instance_type               = var.instance_type 
-  subnet_id                   = var.subnet_id  
+  ami                         = var.ami_id_bastion     
+  instance_type               = var.instance_type_bastion
+  subnet_id                   = var.subnet_id_bastion
   associate_public_ip_address = true             
 
-  vpc_security_group_ids = var.vpc_security_group_ids
+  vpc_security_group_ids = var.vpc_security_group_id_bastion
 
 #   key_name = var.key_pair   
 
@@ -13,20 +13,16 @@ resource "aws_instance" "bastion" {
   }
 }
 
-# # Tạo private key (RSA 4096 bits)
-# resource "tls_private_key" "bastion_key" {
-#   algorithm = "RSA"
-#   rsa_bits  = 4096
-# }
+resource "aws_instance" "mysql" {
+  ami                         = var.ami_id_db
+  instance_type               = var.instance_type_db     
+  subnet_id                   = var.subnet_id_db
+  associate_public_ip_address = false                  
 
-# # Tạo key pair trong AWS từ public key
-# resource "aws_key_pair" "bastion" {
-#   key_name   = "${var.env}-bastion-key"
-#   public_key = tls_private_key.bastion_key.public_key_openssh
-# }
+  vpc_security_group_ids = var.vpc_security_group_id_db
 
-# # Lưu private key vào file local
-# resource "local_file" "bastion_private_key" {
-#   content  = tls_private_key.bastion_key.private_key_pem
-#   filename = "${path.module}/${var.env}-bastion-key.pem"
-# }
+  tags = {
+    Name = "${var.env}-mysql"
+  }
+}
+

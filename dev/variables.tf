@@ -1,8 +1,19 @@
 variable "env" {}
+
 variable "cidr_block" {}
 variable "azs" {}
 
 variable "public_subnet_cidrs" {}
 variable "private_subnet_cidrs" {}
-variable "ami_id" {}
-variable "instance_type" {}
+
+variable "ami_id_bastion" {}
+variable "ami_id_db" {}
+
+variable "instance_type_bastion" {}
+variable "instance_type_db" {}
+
+variable "subnet_id_bastion" {}
+variable "subnet_id_db" {}
+
+variable "vpc_security_group_id_bastion" {}
+variable "vpc_security_group_id_db" {}

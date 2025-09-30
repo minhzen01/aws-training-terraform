@@ -114,33 +114,6 @@ resource "aws_security_group" "bastion_sg" {
   }
 }
 
-# Security Group Private EC2
-resource "aws_security_group" "private_sg" {
-  name        = "${var.env}-private-sg"
-  description = "Allow SSH only from Bastion Host"
-  vpc_id      = aws_vpc.this.id
-
-  ingress {
-    description      = "SSH from Bastion"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    security_groups  = [aws_security_group.bastion_sg.id]
-  }
-
-  ingress {
-    description = "SSH"
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["203.0.0.0/8"]
-  }
-
-  tags = {
-    Name = "${var.env}-private-sg"
-  }
-}
-
 # Security Group Web Server
 resource "aws_security_group" "web_sg" {
   name        = "${var.env}-web-sg"
@@ -165,5 +138,24 @@ resource "aws_security_group" "web_sg" {
 
   tags = {
     Name = "${var.env}-web-sg"
+  }
+}
+
+# Security Group DB
+resource "aws_security_group" "db_sg" {
+  name        = "${var.env}-db-sg"
+  description = "Allow 3306"
+  vpc_id      = aws_vpc.this.id
+
+  ingress {
+    description              = "MySQL"
+    from_port                = 3306
+    to_port                  = 3306
+    protocol                 = "tcp"
+    security_groups          = [aws_security_group.web_sg.id]
+  }
+
+  tags = {
+    Name = "${var.env}-db-sg"
   }
 }
