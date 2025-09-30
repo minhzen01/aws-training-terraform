@@ -32,9 +32,8 @@ resource "aws_instance" "web-application" {
 
   user_data = <<-EOF
               #!/bin/bash
-              DB_IP="${aws_instance.mysql.private_ip}"
-              sed -i "s/\\\$host = \".*\";/\\\$host = \\"\${DB_IP}\\";/" /var/www/domain/index.php
-              sudo systemctl restart nginx
+              sed -i "s/\\\$host = \".*\";/\\\$host = \\"${aws_instance.mysql.private_ip}\\";/" /var/www/domain/index.php
+              systemctl restart nginx
               EOF 
 
   tags = {
