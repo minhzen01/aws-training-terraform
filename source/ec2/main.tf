@@ -32,9 +32,11 @@ resource "aws_instance" "web-application" {
 
   user_data = <<-EOF
               #!/bin/bash
-              sed -i "s/\\\$host = \".*\";/\\\$host = \\"${aws_instance.mysql.private_ip}\\";/" /var/www/domain/index.php
-              systemctl restart nginx
-              EOF 
+              DB_IP="${aws_instance.mysql.private_ip}"
+              # thay đổi dòng host trong file index.php
+              sed -i "s/\\\$host = \".*\";/\\\$host = \\"$DB_IP\\";/" /var/www/domain/index.php
+              systemctl restart nginx || systemctl restart apache2
+              EOF
 
   tags = {
     Name = "${var.env}-web-application"
