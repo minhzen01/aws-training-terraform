@@ -6,7 +6,7 @@ resource "aws_instance" "bastion" {
 
   vpc_security_group_ids = var.vpc_security_group_id_bastion
 
-#   key_name = var.key_pair   
+  key_name = "minh-quang-key-pair-virginia" 
 
   user_data = <<-EOF
               #!/bin/bash
@@ -27,6 +27,8 @@ resource "aws_instance" "mysql" {
   associate_public_ip_address = false                  
 
   vpc_security_group_ids = var.vpc_security_group_id_db
+
+  key_name = "minh-quang-key-pair-virginia" 
 
   tags = {
     Name = "${var.env}-mysql"
