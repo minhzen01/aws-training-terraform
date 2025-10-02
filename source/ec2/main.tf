@@ -89,7 +89,7 @@ resource "aws_autoscaling_group" "web_asg" {
   desired_capacity          = 2
   max_size                  = 4
   min_size                  = 1
-  vpc_zone_identifier       = [var.subnet_id_web]
+  vpc_zone_identifier       = var.subnet_id_web
   health_check_type         = "EC2"
 
   launch_template {
@@ -121,7 +121,7 @@ resource "aws_lb" "web_alb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = var.vpc_security_group_id_alb_web
-  subnets            = [var.subnet_id_web] 
+  subnets            = var.subnet_id_web
 
   enable_deletion_protection = false
 }
