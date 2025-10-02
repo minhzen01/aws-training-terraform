@@ -115,8 +115,8 @@ resource "aws_security_group" "bastion_sg" {
 }
 
 # Security Group Web Server
-resource "aws_security_group" "web_sg" {
-  name        = "${var.env}-web-sg"
+resource "aws_security_group" "alb_web_sg" {
+  name        = "${var.env}-alb-web-sg"
   description = "Allow HTTP/HTTPS"
   vpc_id      = aws_vpc.this.id
 
@@ -125,8 +125,19 @@ resource "aws_security_group" "web_sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["203.0.0.0/8"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "${var.env}-alb-web-sg"
+  }
+}
+
+# Security Group Web Server
+resource "aws_security_group" "web_sg" {
+  name        = "${var.env}-web-sg"
+  description = "Allow HTTP/HTTPS"
+  vpc_id      = aws_vpc.this.id
 
   tags = {
     Name = "${var.env}-web-sg"
@@ -150,6 +161,24 @@ resource "aws_security_group_rule" "web_from_bastion" {
   to_port                  = 8080
   protocol                 = "tcp"
   source_security_group_id = aws_security_group.bastion_sg.id
+  security_group_id        = aws_security_group.web_sg.id
+}
+
+resource "aws_security_group_rule" "alb_to_web" {
+  type                     = "egress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.web_sg.id
+  security_group_id        = aws_security_group.alb_web_sg.id
+}
+
+resource "aws_security_group_rule" "web_from_alb" {
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.alb_web_sg.id
   security_group_id        = aws_security_group.web_sg.id
 }
 

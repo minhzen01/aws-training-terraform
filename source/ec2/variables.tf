@@ -13,6 +13,9 @@ variable "subnet_id_web" {}
 variable "vpc_security_group_id_bastion" {}
 variable "vpc_security_group_id_db" {}
 variable "vpc_security_group_id_web" {}
+variable "vpc_security_group_id_alb_web" {}
+
+variable "vpc_id" {}
 
 variable "env" {}
 
