@@ -20,6 +20,7 @@ module "ec2" {
   subnet_id_bastion             = module.vpc.public_subnets[0]
   subnet_id_db                  = module.vpc.private_subnets[0]
   subnet_id_web                 = module.vpc.private_subnets
+  subnet_id_alb                 = module.vpc.public_subnets
 
   vpc_security_group_id_bastion = [module.vpc.bastion_sg_id]
   vpc_security_group_id_db      = [module.vpc.db_sg_id]

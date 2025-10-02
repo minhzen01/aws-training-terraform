@@ -131,7 +131,7 @@ resource "aws_lb" "web_alb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = var.vpc_security_group_id_alb_web
-  subnets            = var.subnet_id_web
+  subnets            = var.subnet_id_alb
 
   enable_deletion_protection = false
 }

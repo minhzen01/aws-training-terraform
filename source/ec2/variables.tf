@@ -9,6 +9,7 @@ variable "instance_type_web" {}
 variable "subnet_id_bastion" {}
 variable "subnet_id_db" {}
 variable "subnet_id_web" {}
+variable "subnet_id_alb" {}
 
 variable "vpc_security_group_id_bastion" {}
 variable "vpc_security_group_id_db" {}
