@@ -28,13 +28,14 @@ module "ec2" {
   vpc_security_group_id_alb_web = [module.vpc.alb_web_sg_id]
 
   vpc_id                        = module.vpc.vpc_id
+  mysql_domain                  = var.mysql_domain
   env                           = var.env
 }
 
 module "route53" {
   source                        = "../source/route53"
-  root_domain                   = "svmcdevops.com"
-  mysql_domain                  = "mysql.svmcdevops.com"
+  root_domain                   = var.root_domain
+  mysql_domain                  = var.mysql_domain
   vpc_id                        = module.vpc.vpc_id
   mysql_private_ip              = module.ec2.ec2_mysql.private_ip
 }

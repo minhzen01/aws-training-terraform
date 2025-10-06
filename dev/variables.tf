@@ -13,3 +13,6 @@ variable "ami_id_web" {}
 variable "instance_type_bastion" {}
 variable "instance_type_db" {}
 variable "instance_type_web" {}
+
+variable "mysql_domain" {}
+variable "root_domain" {}

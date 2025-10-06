@@ -69,7 +69,7 @@ resource "aws_launch_template" "web_app" {
 
   user_data = base64encode(<<-EOF
               #!/bin/bash
-              DB_IP="${aws_instance.mysql.private_ip}"
+              DB_IP="${var.mysql_domain}"
               sudo sed -i "s/\\\$host = \".*\";/\\\$host = \\\"$DB_IP\\\";/" /var/www/domain/index.php
               sudo systemctl restart nginx
               EOF

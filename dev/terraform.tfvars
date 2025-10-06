@@ -15,3 +15,6 @@ instance_type_db     = "t2.medium"
 
 ami_id_web           = "ami-0699531b79730bcbf"
 instance_type_web    = "t2.micro"
+
+mysql_domain         = "mysql.svmcdevops.com"
+root_domain          = "svmcdevops.com"

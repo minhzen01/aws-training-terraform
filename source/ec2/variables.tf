@@ -18,5 +18,7 @@ variable "vpc_security_group_id_alb_web" {}
 
 variable "vpc_id" {}
 
+variable "mysql_domain" {}
+
 variable "env" {}
 
