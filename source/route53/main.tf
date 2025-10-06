@@ -7,7 +7,7 @@ resource "aws_route53_zone" "private" {
 }
 
 resource "aws_route53_record" "mysql_record" {
-  zone_id = aws_route53_zone.private_zone.zone_id
+  zone_id = aws_route53_zone.private.zone_id
   name    = var.mysql_domain
   type    = "A"
   ttl     = 300
