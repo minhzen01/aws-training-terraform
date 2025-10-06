@@ -5,3 +5,7 @@ output "ec2_id_bastion" {
 output "ec2_id_db" {
   value = aws_instance.mysql.id
 }
+
+output "ec2_mysql" {
+  value = aws_instance.mysql
+}

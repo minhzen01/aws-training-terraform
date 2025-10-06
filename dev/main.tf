@@ -30,3 +30,11 @@ module "ec2" {
   vpc_id                        = module.vpc.vpc_id
   env                           = var.env
 }
+
+module "route53" {
+  source                        = "../source/route53"
+  root_domain                   = "svmcdevops.com"
+  mysql_domain                  = "mysql.svmcdevops.com"
+  vpc_id                        = module.vpc.vpc_id
+  mysql_private_ip              = module.ec2.ec2_mysql.private_ip
+}
